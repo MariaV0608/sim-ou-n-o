@@ -7,97 +7,87 @@
   <title>Sim ou Não?</title>
   <style>
     :root{
-      --bg: #0f172a; /* slate-900 */
-      --card: #111827ee; /* gray-900 */
-      --text: #e5e7eb; /* gray-200 */
-      --muted: #9ca3af; /* gray-400 */
-      --primary: #22c55e; /* green-500 */
-      --danger: #ef4444; /* red-500 */
-      --ring: #a78bfa; /* violet-400 */
+      --bg: #0f172a;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --primary: #22c55e;
+      --danger: #ef4444;
+      --ring: #a78bfa;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,Apple Color Emoji,Segoe UI Emoji;
-      background: radial-gradient(1200px 800px at 30% 20%, #1f2937, transparent),
-                  radial-gradient(1000px 700px at 80% 0%, #0ea5e9, transparent),
-                  linear-gradient(120deg,#0b1020,#0f172a);
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:linear-gradient(120deg,#0b1020,#0f172a);
       color:var(--text);
       display:grid; place-items:center;
     }
     .card{
       width:min(92vw,680px); padding:2.25rem; border-radius:1.25rem;
-      background:linear-gradient(180deg, #0b1225cc, #0b1225aa);
-      border:1px solid #1f2937; box-shadow:0 20px 60px rgba(0,0,0,.35);
-      backdrop-filter: blur(6px);
+      background:#111827dd; border:1px solid #1f2937;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
       text-align:center;
-      animation: pop .5s ease-out;
     }
-    @keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
     h1{margin:0 0 .5rem; font-size:clamp(1.6rem, 3.5vw, 2.4rem); line-height:1.15}
     p.sub{margin:.25rem 0 1.5rem; color:var(--muted)}
-    .buttons{display:flex; gap:1rem; justify-content:center; flex-wrap:wrap}
+    .buttons{position:relative; height:120px;}
     button{
       appearance:none; border:0; padding:.9rem 1.25rem; border-radius:.9rem; font-size:1.05rem; font-weight:700;
-      cursor:pointer; transition: transform .12s ease, box-shadow .12s ease, opacity .25s ease, filter .2s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      cursor:pointer; position:absolute;
+      transition: transform .12s ease;
     }
-    button:focus-visible{outline:2px solid var(--ring); outline-offset:2px}
-    .yes{background:var(--primary); color:#06210e}
-    .no{background:var(--danger); color:#2b0b0b}
-    button:hover{transform: translateY(-2px)}
-    .no.fade{opacity:0; transform: scale(.9); pointer-events:none; filter: blur(.5px)}
+    .yes{background:var(--primary); color:#06210e; left:40%; top:20%;}
+    .no{background:var(--danger); color:#2b0b0b; left:10%; top:60%;}
+    button:hover{transform: scale(1.05)}
     .hidden{display:none}
     .msg{margin-top:1.25rem; font-weight:600}
     .footer{margin-top:1.5rem; font-size:.9rem; color:var(--muted)}
-    .heart{position:fixed; top:-20px; font-size:22px; animation: fall linear forwards;}
-    @keyframes fall{to{transform: translateY(110vh) translateX(var(--x,0)); opacity:0}}
+    .confetti{position:fixed; top:0; width:100%; height:100%; pointer-events:none; overflow:hidden}
+    .confetti span{position:absolute; font-size:20px; animation: fall linear forwards;}
+    @keyframes fall{to{transform: translateY(110vh) rotate(360deg); opacity:0}}
   </style>
 </head>
 <body>
-  <main class="card" role="dialog" aria-labelledby="q" aria-describedby="d">
-    <h1 id="q">Você quer clicar em <em>Sim</em>?</h1>
-    <p id="d" class="sub">Clique em <strong>Não</strong> para ver o que acontece… 😇</p><div class="buttons" aria-live="polite">
+  <main class="card">
+    <h1 id="q">Você aceita?</h1>
+    <p class="sub">Tente clicar em "Não"… 😏</p><div class="buttons">
   <button class="yes" id="btnYes" type="button">Sim</button>
   <button class="no" id="btnNo" type="button">Não</button>
 </div>
 
-<p class="msg hidden" id="msgYes">Boa escolha! 💚</p>
-<p class="msg hidden" id="msgNo">Ops… o <strong>Não</strong> sumiu! Agora só restou a opção certa 😏</p>
+<p class="msg hidden" id="msgYes">🎉 BERTUZZO PARANINFO DO 3B 🎉</p>
 
-<div class="footer">Dica: você pode editar o texto da pergunta direto no código.</div>
-
-  </main>  <script>
+  </main>
+  <div class="confetti" id="confetti"></div>  <script>
     const btnYes = document.getElementById('btnYes');
     const btnNo  = document.getElementById('btnNo');
     const msgYes = document.getElementById('msgYes');
-    const msgNo  = document.getElementById('msgNo');
+    const confettiBox = document.getElementById('confetti');
 
-    // Quando clicar em "Não": desaparece e mostra mensagem
-    btnNo.addEventListener('click', () => {
-      btnNo.classList.add('fade');
-      setTimeout(() => btnNo.remove(), 260);
-      msgNo.classList.remove('hidden');
+    // Sempre que tentar clicar em "Não", ele muda de lugar
+    btnNo.addEventListener('mouseover', () => {
+      const box = btnNo.parentElement.getBoundingClientRect();
+      const newX = Math.random() * (box.width - btnNo.offsetWidth);
+      const newY = Math.random() * (box.height - btnNo.offsetHeight);
+      btnNo.style.left = newX + 'px';
+      btnNo.style.top = newY + 'px';
     });
 
-    // Quando clicar em "Sim": mostra uma mensagem e confete de coraçõezinhos
+    // Quando clicar em "Sim": mostra mensagem e confete
     btnYes.addEventListener('click', () => {
       msgYes.classList.remove('hidden');
-      sprinkleHearts();
+      launchConfetti();
     });
 
-    // Efeito simples de coraçõezinhos caindo
-    function sprinkleHearts(){
-      const count = 14;
-      for(let i=0;i<count;i++){
+    function launchConfetti(){
+      const colors = ['🟦','🟥','🟩','🟨','🟪','🟧'];
+      for(let i=0;i<100;i++){
         const span = document.createElement('span');
-        span.textContent = '❤';
-        span.className = 'heart';
+        span.textContent = colors[Math.floor(Math.random()*colors.length)];
         span.style.left = Math.random()*100 + 'vw';
-        span.style.setProperty('--x', (Math.random()*80-40) + 'px');
-        span.style.animationDuration = (2.5 + Math.random()*2) + 's';
-        document.body.appendChild(span);
-        setTimeout(()=> span.remove(), 4000);
+        span.style.animationDuration = (2 + Math.random()*3) + 's';
+        confettiBox.appendChild(span);
+        setTimeout(()=> span.remove(), 5000);
       }
     }
   </script></body>
