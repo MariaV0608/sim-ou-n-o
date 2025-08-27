@@ -1,94 +1,196 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sim ou Não?</title>
-  <style>
-    :root{
-      --bg: #0f172a;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --primary: #22c55e;
-      --danger: #ef4444;
-      --ring: #a78bfa;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:linear-gradient(120deg,#0b1020,#0f172a);
-      color:var(--text);
-      display:grid; place-items:center;
-    }
-    .card{
-      width:min(92vw,680px); padding:2.25rem; border-radius:1.25rem;
-      background:#111827dd; border:1px solid #1f2937;
-      box-shadow:0 20px 60px rgba(0,0,0,.35);
-      text-align:center;
-    }
-    h1{margin:0 0 .5rem; font-size:clamp(1.6rem, 3.5vw, 2.4rem); line-height:1.15}
-    p.sub{margin:.25rem 0 1.5rem; color:var(--muted)}
-    .buttons{position:relative; height:120px;}
-    button{
-      appearance:none; border:0; padding:.9rem 1.25rem; border-radius:.9rem; font-size:1.05rem; font-weight:700;
-      cursor:pointer; position:absolute;
-      transition: transform .12s ease;
-    }
-    .yes{background:var(--primary); color:#06210e; left:40%; top:20%;}
-    .no{background:var(--danger); color:#2b0b0b; left:10%; top:60%;}
-    button:hover{transform: scale(1.05)}
-    .hidden{display:none}
-    .msg{margin-top:1.25rem; font-weight:600}
-    .footer{margin-top:1.5rem; font-size:.9rem; color:var(--muted)}
-    .confetti{position:fixed; top:0; width:100%; height:100%; pointer-events:none; overflow:hidden}
-    .confetti span{position:absolute; font-size:20px; animation: fall linear forwards;}
-    @keyframes fall{to{transform: translateY(110vh) rotate(360deg); opacity:0}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Paraninfo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            transition: all 0.5s ease;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 70px;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-weight: bold;
+        }
+        
+        #sim {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        #sim:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+        
+        #nao {
+            background: linear-gradient(to right, #F44336, #FF9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+            position: absolute;
+        }
+        
+        #nao:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.6);
+        }
+        
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+        
+        .message {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 30px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.8s ease;
+        }
+        
+        .show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
-  <main class="card">
-    <h1 id="q">Você aceita?</h1>
-    <p class="sub">Tente clicar em "Não"… 😏</p><div class="buttons">
-  <button class="yes" id="btnYes" type="button">Sim</button>
-  <button class="no" id="btnNo" type="button">Não</button>
-</div>
+    <div class="container" id="container">
+        <h1>Você quer ser nosso paraninfo?</h1>
+        <div class="buttons-container">
+            <button id="sim">Sim</button>
+            <button id="nao">Não</button>
+        </div>
+        <div class="message" id="message">BERTUZZO PARANINFO NO 3B</div>
+    </div>
 
-<p class="msg hidden" id="msgYes">🎉 BERTUZZO PARANINFO DO 3B 🎉</p>
-
-  </main>
-  <div class="confetti" id="confetti"></div>  <script>
-    const btnYes = document.getElementById('btnYes');
-    const btnNo  = document.getElementById('btnNo');
-    const msgYes = document.getElementById('msgYes');
-    const confettiBox = document.getElementById('confetti');
-
-    // Sempre que tentar clicar em "Não", ele muda de lugar
-    btnNo.addEventListener('mouseover', () => {
-      const box = btnNo.parentElement.getBoundingClientRect();
-      const newX = Math.random() * (box.width - btnNo.offsetWidth);
-      const newY = Math.random() * (box.height - btnNo.offsetHeight);
-      btnNo.style.left = newX + 'px';
-      btnNo.style.top = newY + 'px';
-    });
-
-    // Quando clicar em "Sim": mostra mensagem e confete
-    btnYes.addEventListener('click', () => {
-      msgYes.classList.remove('hidden');
-      launchConfetti();
-    });
-
-    function launchConfetti(){
-      const colors = ['🟦','🟥','🟩','🟨','🟪','🟧'];
-      for(let i=0;i<100;i++){
-        const span = document.createElement('span');
-        span.textContent = colors[Math.floor(Math.random()*colors.length)];
-        span.style.left = Math.random()*100 + 'vw';
-        span.style.animationDuration = (2 + Math.random()*3) + 's';
-        confettiBox.appendChild(span);
-        setTimeout(()=> span.remove(), 5000);
-      }
-    }
-  </script></body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const simBtn = document.getElementById('sim');
+            const naoBtn = document.getElementById('nao');
+            const container = document.getElementById('container');
+            const message = document.getElementById('message');
+            
+            // Posições para o botão "Não" fugir
+            const positions = [
+                { top: '10px', left: '10px' },
+                { top: '10px', left: '50%', transform: 'translateX(-50%)' },
+                { top: '10px', right: '10px' },
+                { top: '50%', left: '10px', transform: 'translateY(-50%)' },
+                { top: '50%', right: '10px', transform: 'translateY(-50%)' },
+                { bottom: '10px', left: '10px' },
+                { bottom: '10px', left: '50%', transform: 'translateX(-50%)' },
+                { bottom: '10px', right: '10px' }
+            ];
+            
+            let currentPosition = 0;
+            
+            // Função para mover o botão "Não"
+            function moveButton() {
+                currentPosition = (currentPosition + 1) % positions.length;
+                Object.assign(naoBtn.style, positions[currentPosition]);
+            }
+            
+            // Evento para o botão "Não"
+            naoBtn.addEventListener('mouseover', moveButton);
+            naoBtn.addEventListener('click', moveButton);
+            
+            // Evento para o botão "Sim"
+            simBtn.addEventListener('click', function() {
+                // Esconder os botões e a pergunta
+                document.querySelector('h1').classList.add('hidden');
+                document.querySelector('.buttons-container').classList.add('hidden');
+                
+                // Mostrar a mensagem
+                message.classList.add('show');
+                
+                // Criar confetes
+                createConfetti();
+            });
+            
+            // Função para criar confetes
+            function createConfetti() {
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                
+                for (let i = 0; i < 150; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = Math.random() * 100 + 'vw';
+                        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.width = (5 + Math.random() * 10) + 'px';
+                        confetti.style.height = (5 + Math.random() * 10) + 'px';
+                        confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
+                        document.body.appendChild(confetti);
+                        
+                        // Remover o confeti após a animação
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 5000);
+                    }, i * 30);
+                }
+            }
+        });
+    </script>
+</body>
 </html>
